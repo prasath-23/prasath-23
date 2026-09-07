@@ -1,4 +1,8 @@
 <h1 align="center">Hi 👋, I'm Prasath</h1>
+
+<p align="center">
+  <img src="gh-space-shooter.gif" alt="My contribution graph, as a space shooter" />
+</p>
 <h3 align="left">Connect with me:</h3>
 <p align="left">
 <a href="https://twitter.com/prasaxx_" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitter.svg" alt="prasaxx_" height="30" width="40" /></a>
