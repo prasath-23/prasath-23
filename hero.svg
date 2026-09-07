@@ -2,89 +2,84 @@
   <style>
     .name  { font: 800 54px 'Segoe UI', Ubuntu, Helvetica, Arial, sans-serif; fill: #1f2328; }
     .tag   { font: 400 19px 'Segoe UI', Ubuntu, Helvetica, Arial, sans-serif; fill: #57606a; }
-    .wave  { transform-origin: 742px 74px; animation: wave 2.2s ease-in-out infinite; }
     .ground{ stroke: #d0d7de; }
-
     @media (prefers-color-scheme: dark) {
       .name  { fill: #e6edf3; }
       .tag   { fill: #9198a1; }
       .ground{ stroke: #30363d; }
     }
 
-    /* left-right travel, with a flip at each end */
+    /* NOTE: every animated element below must NOT carry a transform="" attribute -
+       a CSS transform replaces it outright. Static offsets live on wrapper groups. */
+
     .runner { animation: travel 11s cubic-bezier(.37,0,.63,1) infinite; }
     @keyframes travel {
-      0%   { transform: translateX(30px)  scaleX(1); }
-      46%  { transform: translateX(770px) scaleX(1); }
-      50%  { transform: translateX(790px) scaleX(-1); }
-      96%  { transform: translateX(50px)  scaleX(-1); }
-      100% { transform: translateX(30px)  scaleX(1); }
+      0%   { transform: translateX(40px)  scaleX(1); }
+      46%  { transform: translateX(760px) scaleX(1); }
+      50%  { transform: translateX(760px) scaleX(-1); }
+      96%  { transform: translateX(40px)  scaleX(-1); }
+      100% { transform: translateX(40px)  scaleX(1); }
     }
-    /* the jump arc, one hop every 1.1s */
+
     .hop { animation: hop 1.1s cubic-bezier(.3,0,.7,1) infinite; }
     @keyframes hop {
       0%   { transform: translateY(0)     scale(1.14, .86); }
-      12%  { transform: translateY(-46px) scale(.92, 1.1); }
-      50%  { transform: translateY(-96px) scale(1, 1); }
-      88%  { transform: translateY(-46px) scale(.94, 1.08); }
+      12%  { transform: translateY(-46px) scale(.94, 1.08); }
+      50%  { transform: translateY(-98px) scale(1, 1); }
+      88%  { transform: translateY(-46px) scale(.96, 1.06); }
       100% { transform: translateY(0)     scale(1.14, .86); }
     }
-    .limb-l { animation: swing 1.1s ease-in-out infinite; transform-origin: 0 0; }
-    .limb-r { animation: swing 1.1s ease-in-out infinite reverse; transform-origin: 0 0; }
-    @keyframes swing { 0%,100% { transform: rotate(-24deg); } 50% { transform: rotate(26deg); } }
-    @keyframes wave  { 0%,100% { transform: rotate(0deg); } 25% { transform: rotate(18deg); } 60% { transform: rotate(-12deg); } }
+
+    .arm-l, .leg-l { animation: swing 1.1s ease-in-out infinite; }
+    .arm-r, .leg-r { animation: swing 1.1s ease-in-out infinite reverse; }
+    @keyframes swing { 0%,100% { transform: rotate(-26deg); } 50% { transform: rotate(28deg); } }
+
+    .wave { animation: wave 2.2s ease-in-out infinite; transform-origin: 12px 12px; }
+    @keyframes wave { 0%,100% { transform: rotate(0deg); } 25% { transform: rotate(20deg); } 60% { transform: rotate(-14deg); } }
 
     @media (prefers-reduced-motion: reduce) {
-      .runner, .hop, .limb-l, .limb-r, .wave { animation: none; }
+      .runner, .hop, .arm-l, .arm-r, .leg-l, .leg-r, .wave { animation: none; }
     }
   </style>
 
-  <!-- text: the thing he jumps around -->
+  <!-- the text he jumps around -->
   <text class="name" x="450" y="96"  text-anchor="middle">Hi, I'm Prasath</text>
   <text class="tag"  x="450" y="132" text-anchor="middle">Backend &amp; AI-agent engineer — C#/.NET · Java · Kotlin · Go · SQL</text>
-  <line class="ground" x1="40" y1="196" x2="860" y2="196" stroke-width="2" stroke-dasharray="6 10" stroke-linecap="round"/>
+  <line class="ground" x1="40" y1="200" x2="860" y2="200" stroke-width="2" stroke-dasharray="6 10" stroke-linecap="round"/>
 
-  <!-- waving hand, parked next to the name -->
-  <g class="wave">
-    <text x="726" y="90" font-size="34">👋</text>
-  </g>
+  <g transform="translate(714,58)"><g class="wave"><text x="0" y="24" font-size="34">👋</text></g></g>
 
-  <!-- ==== the runner: swap this whole group for a real sprite ==== -->
+  <!-- ==== the runner ==== swap the contents of #figure for a real sprite ==== -->
   <g class="runner">
-    <g class="hop" transform="translate(0,196)">
-      <g transform="translate(0,-4) scale(1.05)">
-        <!-- shadow -->
-        <ellipse cx="0" cy="6" rx="22" ry="5" fill="#000" opacity=".12"/>
+    <g transform="translate(0,200)">
+      <g class="hop">
+        <g id="figure">
+          <ellipse cx="0" cy="4" rx="20" ry="4.5" fill="#000" opacity=".13"/>
 
-        <!-- legs -->
-        <g stroke="#f2f2f2" stroke-width="9" stroke-linecap="round">
-          <path class="limb-l" d="M-6 -26 L-14 -2"/>
-          <path class="limb-r" d="M6 -26 L15 -2"/>
+          <!-- legs (rotate about the hip) -->
+          <g transform="translate(-6,-26)"><path class="leg-l" d="M0 0 L-8 24" stroke="#f4f4f4" stroke-width="9" stroke-linecap="round"/></g>
+          <g transform="translate(6,-26)"><path class="leg-r" d="M0 0 L9 24" stroke="#f4f4f4" stroke-width="9" stroke-linecap="round"/></g>
+
+          <path d="M-15 -46 h30 v22 h-30 z" fill="#f8f8f8"/>
+          <path d="M-19 -78 h38 v34 h-38 z" fill="#fdfdfd"/>
+          <path d="M-3.5 -78 h7 v34 h-7 z" fill="#f0c9a8"/>
+
+          <!-- arms (rotate about the shoulder) -->
+          <g transform="translate(-19,-72)"><path class="arm-r" d="M0 0 L-20 -15" stroke="#f0c9a8" stroke-width="8" stroke-linecap="round"/></g>
+          <g transform="translate(19,-72)"><path class="arm-l" d="M0 0 L20 -15" stroke="#f0c9a8" stroke-width="8" stroke-linecap="round"/></g>
+
+          <circle cx="0" cy="-96" r="19" fill="#f6d5b8"/>
+          <path d="M-19 -101 q4 -16 19 -16 q15 0 19 16 q-8 -7 -19 -7 q-11 0 -19 7 z" fill="#fff"/>
+          <path d="M-17 -106 q-6 -9 -1 -14 q3 6 8 8 z" fill="#fff"/>
+          <path d="M17 -106 q6 -9 1 -14 q-3 6 -8 8 z" fill="#fff"/>
+          <path d="M-9 -92 q9 12 18 0 z" fill="#8a3131"/>
+          <circle cx="-7" cy="-100" r="2.4" fill="#2b2b2b"/>
+          <circle cx="7"  cy="-100" r="2.4" fill="#2b2b2b"/>
+
+          <ellipse cx="0" cy="-114" rx="31" ry="8" fill="#e8c37a"/>
+          <path d="M-17 -114 q17 -22 34 0 z" fill="#f0d192"/>
+          <path d="M-17 -116 q17 -8 34 0 l0 4.5 q-17 -8 -34 0 z" fill="#c8412f"/>
         </g>
-        <!-- shorts -->
-        <path d="M-15 -44 h30 v20 h-30 z" fill="#f7f7f7"/>
-        <!-- open shirt -->
-        <path d="M-19 -76 h38 v34 h-38 z" fill="#fdfdfd"/>
-        <path d="M-3 -76 h6 v34 h-6 z" fill="#f0c9a8"/>
-        <!-- arms -->
-        <g stroke="#f0c9a8" stroke-width="8" stroke-linecap="round">
-          <path class="limb-r" d="M-19 -70 L-38 -84"/>
-          <path class="limb-l" d="M19 -70 L38 -84"/>
-        </g>
-        <!-- head -->
-        <circle cx="0" cy="-94" r="19" fill="#f6d5b8"/>
-        <!-- gear-5 white hair -->
-        <path d="M-19 -99 q4 -16 19 -16 q15 0 19 16 q-8 -7 -19 -7 q-11 0 -19 7 z" fill="#fff"/>
-        <path d="M-17 -104 q-6 -9 -1 -14 q3 6 8 8 z" fill="#fff"/>
-        <path d="M17 -104 q6 -9 1 -14 q-3 6 -8 8 z" fill="#fff"/>
-        <!-- grin + eyes -->
-        <path d="M-9 -90 q9 11 18 0 z" fill="#7a2f2f"/>
-        <circle cx="-7" cy="-98" r="2.4" fill="#2b2b2b"/>
-        <circle cx="7"  cy="-98" r="2.4" fill="#2b2b2b"/>
-        <!-- straw hat -->
-        <ellipse cx="0" cy="-112" rx="31" ry="8" fill="#e8c37a"/>
-        <path d="M-17 -112 q17 -22 34 0 z" fill="#f0d192"/>
-        <path d="M-17 -114 q17 -8 34 0 l0 4 q-17 -8 -34 0 z" fill="#c8412f"/>
       </g>
     </g>
   </g>
