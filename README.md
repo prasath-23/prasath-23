@@ -1,9 +1,5 @@
-<h1 align="center">Hi 👋, I'm Prasath</h1>
-
-<p align="center">Backend & AI-agent engineer — C#/.NET, Java, Kotlin, Go, and a lot of SQL.</p>
-
 <p align="center">
-  <img src="gh-space-shooter.gif" alt="My contribution graph, as a space shooter" />
+  <img src="hero.svg" alt="Hi, I'm Prasath — backend & AI-agent engineer" width="100%" />
 </p>
 
 ### 🛠️ Tech
@@ -28,11 +24,3 @@
 - **[Alora Auth](https://github.com/prasath-23/Alora-Auth)** · `Go` — Multi-tenant B2B auth & SSO. OAuth2 + PKCE, RS256 JWTs with key rotation and JWKS, Argon2id, refresh-token reuse detection.
 - **[Krypt](https://github.com/prasath-23/Krypt)** · `Kotlin` — Offline P2P Android app locker. Symmetric-key crypto and deep-link handshakes, with physical-presence onboarding.
 - **[Sleep Apnea Detection](https://github.com/prasath-23/Sleep-apnea-detection)** · `Python` — Detects sleep apnea from a single-lead ECG with a modified 1D LeNet-5.
-
-### 🤝 Connect
-
-<p align="left">
-<a href="https://www.linkedin.com/in/prasath2310" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="prasath2310" height="30" width="40" /></a>
-<a href="https://twitter.com/prasaxx_" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitter.svg" alt="prasaxx_" height="30" width="40" /></a>
-<a href="https://instagram.com/prasaxx" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="prasaxx" height="30" width="40" /></a>
-</p>
