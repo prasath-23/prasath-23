@@ -105,6 +105,14 @@ STACK = [
     ("frontend", [("Vue.js", P), ("Quasar", P), ("React", S)]),
 ]
 
+# (name, label, hint, arrow) - the button row under the hero. The links themselves
+# live in README.md; arrow "out" leaves GitHub, "down" jumps within the page.
+NAV = [
+    ("linkedin", "LinkedIn", "in/prasath2310", "out"),
+    ("projects", "Projects", f"{len(PROJECTS)} repos", "down"),
+    ("stack", "Stack", "stack.yml", "down"),
+]
+
 # --------------------------------------------------------------------------
 # Look
 # --------------------------------------------------------------------------
@@ -168,6 +176,16 @@ def ramp(n):
 
 BLINK = ".cur{animation:blink 1.1s steps(1,end) infinite}\n@keyframes blink{50%{fill-opacity:0}}\n"
 
+# 16x16 line icons and 10x10 arrows for the nav buttons, stroked in the button's accent
+ICONS = {
+    "linkedin": '<rect x="1" y="1" width="14" height="14" rx="3"/><path d="M5 7.4v4.2M8.2 11.6V7.4'
+                'm0 2c0-1.2.8-2 1.9-2s1.9.8 1.9 2v2.2"/><circle cx="5" cy="4.7" r=".4"/>',
+    "projects": '<path d="M1.5 4a1.5 1.5 0 0 1 1.5-1.5h3.2l1.6 1.8h5.2a1.5 1.5 0 0 1 1.5 1.5v6.7'
+                'a1.5 1.5 0 0 1-1.5 1.5H3a1.5 1.5 0 0 1-1.5-1.5z"/>',
+    "stack": '<path d="M8 1.8 14.5 5.2 8 8.6 1.5 5.2zM1.5 8.3 8 11.7l6.5-3.4M1.5 11.3 8 14.7l6.5-3.4"/>',
+}
+ARROWS = {"out": "M2 8 8 2M3.5 2H8v4.5", "down": "M5 1.5v7M1.8 5.5 5 8.7l3.2-3.2"}
+
 
 def document(w, h, label, css, defs, body):
     return (
@@ -179,13 +197,18 @@ def document(w, h, label, css, defs, body):
     )
 
 
+BACKDROP = (
+    f'<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="{BG[0]}"/>'
+    f'<stop offset=".5" stop-color="{BG[1]}"/><stop offset="1" stop-color="{BG[2]}"/></linearGradient>'
+    f'<pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">'
+    f'<circle cx="2" cy="2" r="1" fill="{BORDER}" fill-opacity=".45"/></pattern>'
+)
+
+
 def frame(w, h, title, right="", hero=False):
     """Chrome shared by every card. Returns (defs, under, over)."""
     defs = (
-        f'<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="{BG[0]}"/>'
-        f'<stop offset=".5" stop-color="{BG[1]}"/><stop offset="1" stop-color="{BG[2]}"/></linearGradient>'
-        f'<pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">'
-        f'<circle cx="2" cy="2" r="1" fill="{BORDER}" fill-opacity=".45"/></pattern>'
+        BACKDROP +
         f'<radialGradient id="glowA"><stop offset="0" stop-color="{CYAN}" stop-opacity=".13"/>'
         f'<stop offset="1" stop-color="{CYAN}" stop-opacity="0"/></radialGradient>'
         f'<radialGradient id="glowB"><stop offset="0" stop-color="{VIOLET}" stop-opacity=".12"/>'
@@ -450,6 +473,39 @@ def stack():
     return document(w, h, label, "", defs, under + over + "".join(out))
 
 
+def nav(name, label, hint, arrow, accent):
+    """A link button for the row under the hero: icon tile, label, hint, arrow."""
+    w, h, xt = 210, 58, 62
+    fits(xt + text_w(label, 15, 600), w - 40, label)
+    fits(xt + mono_w(hint, 11.5), w - 40, hint)
+    stroke = 'fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"'
+    defs = (
+        BACKDROP +
+        f'<radialGradient id="glow"><stop offset="0" stop-color="{accent}" stop-opacity=".16"/>'
+        f'<stop offset="1" stop-color="{accent}" stop-opacity="0"/></radialGradient>'
+        f'<clipPath id="clip"><rect x="1" y="1" width="{w - 2}" height="{h - 2}" rx="11"/></clipPath>'
+        f'<linearGradient id="edge" gradientUnits="userSpaceOnUse" x1="16" y1="0" x2="{w - 16}" y2="0">'
+        f'<stop offset="0" stop-color="{accent}" stop-opacity="0"/><stop offset=".5" stop-color="{accent}"/>'
+        f'<stop offset="1" stop-color="{accent}" stop-opacity="0"/></linearGradient>'
+    )
+    body = (
+        f'<rect x="1" y="1" width="{w - 2}" height="{h - 2}" rx="11" fill="url(#bg)"/>'
+        f'<g clip-path="url(#clip)"><rect width="{w}" height="{h}" fill="url(#dots)" opacity=".65"/>'
+        f'<circle cx="30" cy="{h / 2:g}" r="80" fill="url(#glow)"/></g>'
+        f'<g transform="translate(14,{(h - 34) / 2:g})">'
+        f'<rect x=".5" y=".5" width="33" height="33" rx="8" fill="{accent}" fill-opacity=".08" '
+        f'stroke="{accent}" stroke-opacity=".3"/>'
+        f'<g transform="translate(9,9)" stroke="{accent}" {stroke}>{ICONS[name]}</g></g>'
+        f'<text x="{xt}" y="{h / 2 - 3:g}" class="sans" font-size="15" font-weight="600" '
+        f'fill="{TEXT}">{esc(label)}</text>'
+        f'<text x="{xt}" y="{h / 2 + 14:g}" class="mono" font-size="11.5" fill="{MUTED}">{esc(hint)}</text>'
+        f'<path transform="translate({w - 32},{h / 2 - 5:g})" d="{ARROWS[arrow]}" stroke="{MUTED}" {stroke}/>'
+        f'<rect x="1" y="1" width="{w - 2}" height="{h - 2}" rx="11" fill="none" stroke="{BORDER}"/>'
+        f'<rect x="16" y=".25" width="{w - 32}" height="1.5" fill="url(#edge)"/>'
+    )
+    return document(w, h, f"{label} - {hint}", "", defs, body)
+
+
 # --------------------------------------------------------------------------
 
 def main():
@@ -473,6 +529,8 @@ def main():
         "project-sleep-apnea.svg": project(halves[1], 420, tallest)[0],
         "stack.svg": stack(),
     }
+    for (name, *rest), accent in zip(NAV, ramp(len(NAV))):
+        cards[f"nav-{name}.svg"] = nav(name, *rest, accent)
     os.makedirs(args.out, exist_ok=True)
     for name, svg in cards.items():
         with open(os.path.join(args.out, name), "w", encoding="utf-8", newline="\n") as f:
