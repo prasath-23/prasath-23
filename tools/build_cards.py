@@ -106,11 +106,9 @@ STACK = [
 ]
 
 # (name, label, hint, arrow) - the button row under the hero. The links themselves
-# live in README.md; arrow "out" leaves GitHub, "down" jumps within the page.
+# live in README.md; arrow "out" marks a link that leaves GitHub.
 NAV = [
     ("linkedin", "LinkedIn", "in/prasath2310", "out"),
-    ("projects", "Projects", f"{len(PROJECTS)} repos", "down"),
-    ("stack", "Stack", "stack.yml", "down"),
 ]
 
 # --------------------------------------------------------------------------
@@ -180,11 +178,8 @@ BLINK = ".cur{animation:blink 1.1s steps(1,end) infinite}\n@keyframes blink{50%{
 ICONS = {
     "linkedin": '<rect x="1" y="1" width="14" height="14" rx="3"/><path d="M5 7.4v4.2M8.2 11.6V7.4'
                 'm0 2c0-1.2.8-2 1.9-2s1.9.8 1.9 2v2.2"/><circle cx="5" cy="4.7" r=".4"/>',
-    "projects": '<path d="M1.5 4a1.5 1.5 0 0 1 1.5-1.5h3.2l1.6 1.8h5.2a1.5 1.5 0 0 1 1.5 1.5v6.7'
-                'a1.5 1.5 0 0 1-1.5 1.5H3a1.5 1.5 0 0 1-1.5-1.5z"/>',
-    "stack": '<path d="M8 1.8 14.5 5.2 8 8.6 1.5 5.2zM1.5 8.3 8 11.7l6.5-3.4M1.5 11.3 8 14.7l6.5-3.4"/>',
 }
-ARROWS = {"out": "M2 8 8 2M3.5 2H8v4.5", "down": "M5 1.5v7M1.8 5.5 5 8.7l3.2-3.2"}
+ARROWS = {"out": "M2 8 8 2M3.5 2H8v4.5"}
 
 
 def document(w, h, label, css, defs, body):
