@@ -174,9 +174,18 @@ def ramp(n):
 BLINK = ".cur{animation:blink 1.1s steps(1,end) infinite}\n@keyframes blink{50%{fill-opacity:0}}\n"
 ROWS_IN = ".ln{animation:ln .5s ease-out backwards}\n@keyframes ln{from{opacity:0;transform:translateX(-6px)}}\n"
 
-# 16x16 line icon for the contact card's link pill; set the stroke on a wrapping group
-LINKEDIN_ICON = ('<rect x="1" y="1" width="14" height="14" rx="3"/><path d="M5 7.4v4.2M8.2 11.6V7.4'
-                 'm0 2c0-1.2.8-2 1.9-2s1.9.8 1.9 2v2.2"/><circle cx="5" cy="4.7" r=".4"/>')
+# LinkedIn's "in" logo, 24x24. The path (Simple Icons) is the brand-blue square with the
+# letters cut out; the white square behind it makes them white, as in the official mark.
+LINKEDIN_BLUE = "#0A66C2"
+LINKEDIN_LOGO = (
+    '<rect x="2" y="2" width="20" height="20" fill="#fff"/>'
+    f'<path fill="{LINKEDIN_BLUE}" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037'
+    '-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 '
+    '3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92'
+    '-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019'
+    'H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24'
+    'h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>'
+)
 
 
 def document(w, h, label, css, defs, body):
@@ -477,8 +486,7 @@ def contact():
         f'<g transform="translate({xt},108)">'
         f'<rect x=".5" y=".5" width="{pw - 1}" height="35" rx="8" fill="{CYAN}" fill-opacity=".08" '
         f'stroke="{CYAN}" stroke-opacity=".3"/>'
-        f'<g transform="translate(13,10)" fill="none" stroke="{CYAN}" stroke-width="1.5" '
-        f'stroke-linecap="round" stroke-linejoin="round">{LINKEDIN_ICON}</g>'
+        f'<g transform="translate(12,9) scale(.75)">{LINKEDIN_LOGO}</g>'
         f'<text x="40" y="23" class="mono" font-size="{size}" fill="{TEXT}">{esc(CONTACT_URL)}'
         f'<tspan dx="8" fill="{CYAN}">↗</tspan></text></g>')
 
