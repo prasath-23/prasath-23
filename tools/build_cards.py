@@ -105,10 +105,13 @@ STACK = [
     ("frontend", [("Vue.js", P), ("Quasar", P), ("React", S)]),
 ]
 
-# the closing card; README.md links the whole card to the LinkedIn profile
+# (name, site, url) - the closing cards, side by side; each is assets/contact-<name>.svg,
+# runs `./connect --<name>`, and is linked to its profile from README.md
 CONTACT_FILE = "connect.sh"
-CONTACT_CMD = "./connect --linkedin"
-CONTACT_URL = "linkedin.com/in/prasath2310"
+CONTACTS = [
+    ("linkedin", "LinkedIn", "linkedin.com/in/prasath2310"),
+    ("github", "GitHub", "github.com/prasath-23"),
+]
 
 # --------------------------------------------------------------------------
 # Look
@@ -186,6 +189,18 @@ LINKEDIN_LOGO = (
     'H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24'
     'h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>'
 )
+# GitHub's Invertocat mark, 24x24 (Simple Icons path), in white as for dark backgrounds
+GITHUB_LOGO = (
+    '<path fill="#fff" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258'
+    '.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 '
+    '17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495'
+    '.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135'
+    '-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 '
+    '.405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 '
+    '4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825'
+    '.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>'
+)
+LOGOS = {"linkedin": LINKEDIN_LOGO, "github": GITHUB_LOGO}
 
 
 def document(w, h, label, css, defs, body):
@@ -467,27 +482,29 @@ def stack():
     return document(w, h, label, "", defs, under + over + "".join(out))
 
 
-def contact():
-    """The closing card: a short terminal session that ends on a link pill."""
-    w, size, x0, xt = 850, 14.5, 40, 60
+def contact(name, site, url):
+    """A half-width closing card: a short terminal session that ends on a link pill."""
+    w, size, x0, xt = 420, 14.5, 40, 60
+    cmd = f"./connect --{name}"
     rows = []
 
     def add(svg):
         rows.append(f'<g class="ln" style="animation-delay:{0.15 + len(rows) * 0.11:.2f}s">{svg}</g>')
 
+    fits(xt + mono_w(cmd, size), w - 24, cmd)
     add(f'<text x="{x0}" y="92" class="mono" font-size="{size}" fill="{CYAN}">$</text>'
         f'<text x="{xt}" y="92" class="mono" font-size="{size}" font-weight="600" fill="{TEXT}">'
-        f'{esc(CONTACT_CMD)}</text>')
+        f'{esc(cmd)}</text>')
 
     # the arrow is a trailing <tspan>, so it follows the URL in any font
-    pw = round(40 + mono_w(CONTACT_URL + " ↗", size) + 16)
-    fits(xt + pw, w - 24, CONTACT_URL)
+    pw = round(40 + mono_w(url + " ↗", size) + 16)
+    fits(xt + pw, w - 24, url)
     add(f'<text x="{x0}" y="131" class="mono" font-size="{size}" fill="{VIOLET}">→</text>'
         f'<g transform="translate({xt},108)">'
         f'<rect x=".5" y=".5" width="{pw - 1}" height="35" rx="8" fill="{CYAN}" fill-opacity=".08" '
         f'stroke="{CYAN}" stroke-opacity=".3"/>'
-        f'<g transform="translate(12,9) scale(.75)">{LINKEDIN_LOGO}</g>'
-        f'<text x="40" y="23" class="mono" font-size="{size}" fill="{TEXT}">{esc(CONTACT_URL)}'
+        f'<g transform="translate(12,9) scale(.75)">{LOGOS[name]}</g>'
+        f'<text x="40" y="23" class="mono" font-size="{size}" fill="{TEXT}">{esc(url)}'
         f'<tspan dx="8" fill="{CYAN}">↗</tspan></text></g>')
 
     add(f'<text x="{x0}" y="176" class="mono" font-size="{size}"><tspan fill="{CYAN}">$</tspan>'
@@ -496,7 +513,7 @@ def contact():
 
     defs, under, over = frame(w, h, CONTACT_FILE, bar_right(w, "bash"))
     css = "@media (prefers-reduced-motion:no-preference){\n" + ROWS_IN + BLINK + "}\n"
-    label = f"Connect with Prasath on LinkedIn: {CONTACT_URL}"
+    label = f"Connect with Prasath on {site}: {url}"
     return document(w, h, label, css, defs, under + over + "".join(rows))
 
 
@@ -522,8 +539,9 @@ def main():
         "project-krypt.svg": project(halves[0], 420, tallest)[0],
         "project-sleep-apnea.svg": project(halves[1], 420, tallest)[0],
         "stack.svg": stack(),
-        "contact.svg": contact(),
     }
+    for name, site, url in CONTACTS:
+        cards[f"contact-{name}.svg"] = contact(name, site, url)
     os.makedirs(args.out, exist_ok=True)
     for name, svg in cards.items():
         with open(os.path.join(args.out, name), "w", encoding="utf-8", newline="\n") as f:

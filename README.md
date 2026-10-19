@@ -26,5 +26,6 @@
 </p>
 
 <p align="center">
-  <a href="https://www.linkedin.com/in/prasath2310"><img src="assets/contact.svg" width="100%" alt="Connect with Prasath on LinkedIn: linkedin.com/in/prasath2310" /></a>
+  <a href="https://www.linkedin.com/in/prasath2310"><img src="assets/contact-linkedin.svg" width="49%" alt="Connect with Prasath on LinkedIn: linkedin.com/in/prasath2310" /></a>
+  <a href="https://github.com/prasath-23"><img src="assets/contact-github.svg" width="49%" alt="Connect with Prasath on GitHub: github.com/prasath-23" /></a>
 </p>
