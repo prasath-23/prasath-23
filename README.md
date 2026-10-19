@@ -5,10 +5,6 @@
 </p>
 
 <p align="center">
-  <a href="https://www.linkedin.com/in/prasath2310"><img src="assets/nav-linkedin.svg" alt="LinkedIn: in/prasath2310" /></a>
-</p>
-
-<p align="center">
   <picture><img src="assets/about.svg" width="100%" alt="Terminal session. whoami: backend and AI-agent engineer in Coimbatore, India. Now: Associate Engineer, Agent Engineering at Aptean, building AI agents for ERP products with prompts, retrieval, MCP integrations and evals. Shipped: the ARS/Paragon routing integration end to end (SQL Server, .NET API, Vue), adopted by two enterprise clients; the ShipsGo v1.2 to v2 migration on AWS Lambda and EventBridge; zero-trust secrets moved from Parameter Store to AWS KMS; account deactivation sync with forced logout across 5 services; 240+ pull requests authored." /></picture>
 </p>
 
@@ -27,4 +23,8 @@
 
 <p align="center">
   <picture><img src="assets/stack.svg" width="100%" alt="Tech stack. Used at work: C#, Java, Kotlin, SQL and T-SQL, JavaScript, .NET Core, ASP.NET, Entity Framework, prompt engineering, retrieval, MCP, agent evaluation, AWS Lambda, EventBridge, KMS, S3, EC2, ECR, Terraform, Docker, Nginx, Linux, Azure DevOps, SQL Server, PostgreSQL, Redis, zero-trust secrets, OpenTelemetry, Grafana LGTM, SonarQube, Vue.js, Quasar. In side projects: Go, Python, Gin, gRPC, Claude Code, OAuth2 and OIDC, PKCE, JWT and JWKS, Argon2id, React." /></picture>
+</p>
+
+<p align="center">
+  <a href="https://www.linkedin.com/in/prasath2310"><img src="assets/contact.svg" width="100%" alt="Connect with Prasath on LinkedIn: linkedin.com/in/prasath2310" /></a>
 </p>

@@ -105,11 +105,10 @@ STACK = [
     ("frontend", [("Vue.js", P), ("Quasar", P), ("React", S)]),
 ]
 
-# (name, label, hint, arrow) - the button row under the hero. The links themselves
-# live in README.md; arrow "out" marks a link that leaves GitHub.
-NAV = [
-    ("linkedin", "LinkedIn", "in/prasath2310", "out"),
-]
+# the closing card; README.md links the whole card to the LinkedIn profile
+CONTACT_FILE = "connect.sh"
+CONTACT_CMD = "./connect --linkedin"
+CONTACT_URL = "linkedin.com/in/prasath2310"
 
 # --------------------------------------------------------------------------
 # Look
@@ -173,13 +172,11 @@ def ramp(n):
 # --------------------------------------------------------------------------
 
 BLINK = ".cur{animation:blink 1.1s steps(1,end) infinite}\n@keyframes blink{50%{fill-opacity:0}}\n"
+ROWS_IN = ".ln{animation:ln .5s ease-out backwards}\n@keyframes ln{from{opacity:0;transform:translateX(-6px)}}\n"
 
-# 16x16 line icons and 10x10 arrows for the nav buttons, stroked in the button's accent
-ICONS = {
-    "linkedin": '<rect x="1" y="1" width="14" height="14" rx="3"/><path d="M5 7.4v4.2M8.2 11.6V7.4'
-                'm0 2c0-1.2.8-2 1.9-2s1.9.8 1.9 2v2.2"/><circle cx="5" cy="4.7" r=".4"/>',
-}
-ARROWS = {"out": "M2 8 8 2M3.5 2H8v4.5"}
+# 16x16 line icon for the contact card's link pill; set the stroke on a wrapping group
+LINKEDIN_ICON = ('<rect x="1" y="1" width="14" height="14" rx="3"/><path d="M5 7.4v4.2M8.2 11.6V7.4'
+                 'm0 2c0-1.2.8-2 1.9-2s1.9.8 1.9 2v2.2"/><circle cx="5" cy="4.7" r=".4"/>')
 
 
 def document(w, h, label, css, defs, body):
@@ -192,18 +189,13 @@ def document(w, h, label, css, defs, body):
     )
 
 
-BACKDROP = (
-    f'<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="{BG[0]}"/>'
-    f'<stop offset=".5" stop-color="{BG[1]}"/><stop offset="1" stop-color="{BG[2]}"/></linearGradient>'
-    f'<pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">'
-    f'<circle cx="2" cy="2" r="1" fill="{BORDER}" fill-opacity=".45"/></pattern>'
-)
-
-
 def frame(w, h, title, right="", hero=False):
     """Chrome shared by every card. Returns (defs, under, over)."""
     defs = (
-        BACKDROP +
+        f'<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="{BG[0]}"/>'
+        f'<stop offset=".5" stop-color="{BG[1]}"/><stop offset="1" stop-color="{BG[2]}"/></linearGradient>'
+        f'<pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">'
+        f'<circle cx="2" cy="2" r="1" fill="{BORDER}" fill-opacity=".45"/></pattern>'
         f'<radialGradient id="glowA"><stop offset="0" stop-color="{CYAN}" stop-opacity=".13"/>'
         f'<stop offset="1" stop-color="{CYAN}" stop-opacity="0"/></radialGradient>'
         f'<radialGradient id="glowB"><stop offset="0" stop-color="{VIOLET}" stop-opacity=".12"/>'
@@ -384,9 +376,7 @@ def about():
     h = y - lh + 30
 
     defs, under, over = frame(w, h, "prasath@github: ~", bar_right(w, "bash"))
-    css = ("@media (prefers-reduced-motion:no-preference){\n"
-           ".ln{animation:ln .5s ease-out backwards}\n@keyframes ln{from{opacity:0;transform:translateX(-6px)}}\n"
-           + BLINK + "}\n")
+    css = "@media (prefers-reduced-motion:no-preference){\n" + ROWS_IN + BLINK + "}\n"
     said = "; ".join(" - ".join(a) for kind, *a in ABOUT if kind in ("out", "dim", "item", "note"))
     return document(w, h, f"About Prasath: {said}.", css, defs, under + over + "".join(rows))
 
@@ -468,37 +458,38 @@ def stack():
     return document(w, h, label, "", defs, under + over + "".join(out))
 
 
-def nav(name, label, hint, arrow, accent):
-    """A link button for the row under the hero: icon tile, label, hint, arrow."""
-    w, h, xt = 210, 58, 62
-    fits(xt + text_w(label, 15, 600), w - 40, label)
-    fits(xt + mono_w(hint, 11.5), w - 40, hint)
-    stroke = 'fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"'
-    defs = (
-        BACKDROP +
-        f'<radialGradient id="glow"><stop offset="0" stop-color="{accent}" stop-opacity=".16"/>'
-        f'<stop offset="1" stop-color="{accent}" stop-opacity="0"/></radialGradient>'
-        f'<clipPath id="clip"><rect x="1" y="1" width="{w - 2}" height="{h - 2}" rx="11"/></clipPath>'
-        f'<linearGradient id="edge" gradientUnits="userSpaceOnUse" x1="16" y1="0" x2="{w - 16}" y2="0">'
-        f'<stop offset="0" stop-color="{accent}" stop-opacity="0"/><stop offset=".5" stop-color="{accent}"/>'
-        f'<stop offset="1" stop-color="{accent}" stop-opacity="0"/></linearGradient>'
-    )
-    body = (
-        f'<rect x="1" y="1" width="{w - 2}" height="{h - 2}" rx="11" fill="url(#bg)"/>'
-        f'<g clip-path="url(#clip)"><rect width="{w}" height="{h}" fill="url(#dots)" opacity=".65"/>'
-        f'<circle cx="30" cy="{h / 2:g}" r="80" fill="url(#glow)"/></g>'
-        f'<g transform="translate(14,{(h - 34) / 2:g})">'
-        f'<rect x=".5" y=".5" width="33" height="33" rx="8" fill="{accent}" fill-opacity=".08" '
-        f'stroke="{accent}" stroke-opacity=".3"/>'
-        f'<g transform="translate(9,9)" stroke="{accent}" {stroke}>{ICONS[name]}</g></g>'
-        f'<text x="{xt}" y="{h / 2 - 3:g}" class="sans" font-size="15" font-weight="600" '
-        f'fill="{TEXT}">{esc(label)}</text>'
-        f'<text x="{xt}" y="{h / 2 + 14:g}" class="mono" font-size="11.5" fill="{MUTED}">{esc(hint)}</text>'
-        f'<path transform="translate({w - 32},{h / 2 - 5:g})" d="{ARROWS[arrow]}" stroke="{MUTED}" {stroke}/>'
-        f'<rect x="1" y="1" width="{w - 2}" height="{h - 2}" rx="11" fill="none" stroke="{BORDER}"/>'
-        f'<rect x="16" y=".25" width="{w - 32}" height="1.5" fill="url(#edge)"/>'
-    )
-    return document(w, h, f"{label} - {hint}", "", defs, body)
+def contact():
+    """The closing card: a short terminal session that ends on a link pill."""
+    w, size, x0, xt = 850, 14.5, 40, 60
+    rows = []
+
+    def add(svg):
+        rows.append(f'<g class="ln" style="animation-delay:{0.15 + len(rows) * 0.11:.2f}s">{svg}</g>')
+
+    add(f'<text x="{x0}" y="92" class="mono" font-size="{size}" fill="{CYAN}">$</text>'
+        f'<text x="{xt}" y="92" class="mono" font-size="{size}" font-weight="600" fill="{TEXT}">'
+        f'{esc(CONTACT_CMD)}</text>')
+
+    # the arrow is a trailing <tspan>, so it follows the URL in any font
+    pw = round(40 + mono_w(CONTACT_URL + " ↗", size) + 16)
+    fits(xt + pw, w - 24, CONTACT_URL)
+    add(f'<text x="{x0}" y="131" class="mono" font-size="{size}" fill="{VIOLET}">→</text>'
+        f'<g transform="translate({xt},108)">'
+        f'<rect x=".5" y=".5" width="{pw - 1}" height="35" rx="8" fill="{CYAN}" fill-opacity=".08" '
+        f'stroke="{CYAN}" stroke-opacity=".3"/>'
+        f'<g transform="translate(13,10)" fill="none" stroke="{CYAN}" stroke-width="1.5" '
+        f'stroke-linecap="round" stroke-linejoin="round">{LINKEDIN_ICON}</g>'
+        f'<text x="40" y="23" class="mono" font-size="{size}" fill="{TEXT}">{esc(CONTACT_URL)}'
+        f'<tspan dx="8" fill="{CYAN}">↗</tspan></text></g>')
+
+    add(f'<text x="{x0}" y="176" class="mono" font-size="{size}"><tspan fill="{CYAN}">$</tspan>'
+        f'<tspan class="cur" dx="10" fill="{CYAN}">▌</tspan></text>')
+    h = 176 + 30
+
+    defs, under, over = frame(w, h, CONTACT_FILE, bar_right(w, "bash"))
+    css = "@media (prefers-reduced-motion:no-preference){\n" + ROWS_IN + BLINK + "}\n"
+    label = f"Connect with Prasath on LinkedIn: {CONTACT_URL}"
+    return document(w, h, label, css, defs, under + over + "".join(rows))
 
 
 # --------------------------------------------------------------------------
@@ -523,9 +514,8 @@ def main():
         "project-krypt.svg": project(halves[0], 420, tallest)[0],
         "project-sleep-apnea.svg": project(halves[1], 420, tallest)[0],
         "stack.svg": stack(),
+        "contact.svg": contact(),
     }
-    for (name, *rest), accent in zip(NAV, ramp(len(NAV))):
-        cards[f"nav-{name}.svg"] = nav(name, *rest, accent)
     os.makedirs(args.out, exist_ok=True)
     for name, svg in cards.items():
         with open(os.path.join(args.out, name), "w", encoding="utf-8", newline="\n") as f:
